@@ -18,8 +18,14 @@ set_PID_Package_Version(0 1)
 
 add_PID_Package_Category(driver/fri)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LINUX__ -m64")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__LINUX__ -m64")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__MACOS__ m64")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__MACOS__ -m64")
+ELSE()
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LINUX__ -m64")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__LINUX__ -m64")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 
 build_PID_Package()
 
