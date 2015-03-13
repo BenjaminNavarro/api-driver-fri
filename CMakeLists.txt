@@ -8,7 +8,7 @@ PROJECT(api-driver-fri)
 declare_PID_Package(	AUTHOR 		Benjamin Navarro
 			INSTITUTION	LIRMM
 			MAIL		navarro@lirmm.fr
-			ADDRESS 	git@rob-dev.lirmm.fr:kuka-lwr-knowbotics/api-driver-fri.git
+			ADDRESS 	git@rob-dev.lirmm.fr:kuka-lwr/api-driver-fri.git
 			YEAR 		2015
 			LICENSE 	CeCILL-C
 			DESCRIPTION "Wrapper for the FRI library"
