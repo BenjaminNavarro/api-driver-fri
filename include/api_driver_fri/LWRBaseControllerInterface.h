@@ -184,6 +184,64 @@ public:
 		}
 	}
 
+//  ---------------------- Doxygen info ----------------------
+//! \fn inline int GetCommandedJointPositions(float *CommandedJointPositions)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetCommandedJointPositions()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetCommandedJointPositions()
+//!
+//! \return
+//! <ul>
+//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
+//! <li> \c EOK if no error occurred.
+//! </ul>
+//  ----------------------------------------------------------
+	inline int GetCommandedJointPositions(float *CommandedJointPositions)
+	{
+		this->FRI->GetCommandedJointPositions(CommandedJointPositions);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
+	}
+
+//  ---------------------- Doxygen info ----------------------
+//! \fn inline int GetCommandedJointPositionOffsets(float *CommandedJointPositionOffsets)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetCommandedJointPositionOffsets()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetCommandedJointPositionOffsets()
+//!
+//! \return
+//! <ul>
+//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
+//! <li> \c EOK if no error occurred.
+//! </ul>
+//  ----------------------------------------------------------
+	inline int GetCommandedJointPositionOffsets(float *CommandedJointPositionOffsets)
+	{
+		this->FRI->GetCommandedJointPositionOffsets(CommandedJointPositionOffsets);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
+	}
+
 
 //  ---------------------- Doxygen info ----------------------
 //! \fn inline int GetMeasuredJointTorques(float *MeasuredJointTorques)
@@ -203,6 +261,152 @@ public:
 	inline int GetMeasuredJointTorques(float *MeasuredJointTorques)
 	{
 		this->FRI->GetMeasuredJointTorques(MeasuredJointTorques);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
+	}
+
+//  ---------------------- Doxygen info ----------------------
+//! \fn inline int GetEstimatedExternalJointTorques(float *EstimatedExternalJointTorques)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetEstimatedExternalJointTorques()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetEstimatedExternalJointTorques()
+//!
+//! \return
+//! <ul>
+//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
+//! <li> \c EOK if no error occurred.
+//! </ul>
+//  ----------------------------------------------------------
+	inline int GetEstimatedExternalJointTorques(float *EstimatedExternalJointTorques)
+	{
+		this->FRI->GetEstimatedExternalJointTorques(EstimatedExternalJointTorques);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
+	}
+
+//  ---------------------- Doxygen info ----------------------
+//! \fn inline int GetMeasuredCartPose(float *MeasuredCartPose)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetMeasuredCartPose()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetMeasuredCartPose()
+//!
+//! \return
+//! <ul>
+//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
+//! <li> \c EOK if no error occurred.
+//! </ul>
+//  ----------------------------------------------------------
+	inline int GetMeasuredCartPose(float *MeasuredCartPose)
+	{
+		this->FRI->GetMeasuredCartPose(MeasuredCartPose);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
+	}
+
+
+//  ---------------------- Doxygen info ----------------------
+//! \fn inline int GetCommandedCartPose(float *CommandedCartPose)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetCommandedCartPose()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetCommandedCartPose()
+//!
+//! \return
+//! <ul>
+//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
+//! <li> \c EOK if no error occurred.
+//! </ul>-------------------------------
+	inline int GetCommandedCartPose(float *CommandedCartPose)
+	{
+		this->FRI->GetCommandedCartPose(CommandedCartPose);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
+	}
+
+
+//  ---------------------- Doxygen info ----------------------
+//! \fn inline int GetCommandedCartPoseOffsets(float *CommandedCartPoseOffsets)
+//! \brief
+//! \copybrief FastResearchInterface::GetCommandedCartPoseOffsets()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetCommandedCartPoseOffsets()
+//!
+//! \return
+//! <ul>
+//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
+//! <li> \c EOK if no error occurred.
+//! </ul>
+//  ----------------------------------------------------------
+	inline int GetCommandedCartPoseOffsets(float *CommandedCartPoseOffsets)
+	{
+		this->FRI->GetCommandedCartPoseOffsets(CommandedCartPoseOffsets);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
+	}
+
+
+//  ---------------------- Doxygen info ----------------------
+//! \fn inline int GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetEstimatedExternalCartForcesAndTorques()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetEstimatedExternalCartForcesAndTorques()
+//!
+//! \return
+//! <ul>
+//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
+//! <li> \c EOK if no error occurred.
+//! </ul>
+//  ----------------------------------------------------------
+	inline int GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
+	{
+		this->FRI->GetEstimatedExternalCartForcesAndTorques(EstimatedExternalCartForcesAndTorques);
 
 		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
 		{
