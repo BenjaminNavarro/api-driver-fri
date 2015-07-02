@@ -14,7 +14,7 @@ declare_PID_Package(	AUTHOR 		Benjamin Navarro
 			DESCRIPTION "Wrapper for the FRI library"
 		)
 
-set_PID_Package_Version(0 1)
+set_PID_Package_Version(0 2 0)
 
 add_PID_Package_Category(driver/fri)
 
