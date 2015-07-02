@@ -51,7 +51,6 @@
 #include <errno.h>
 #include <string.h>
 #include <InitializationFileEntry.h>
-#include <OSAbstraction.h>
 
 #ifdef __LINUX__
 #define stricmp strcasecmp

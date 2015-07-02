@@ -131,7 +131,6 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 	pthread_cond_init(&(this->CondVarForDataReceptionFromKRC	), NULL);
 	pthread_cond_init(&(this->CondVarForThreadCreation			), NULL);
 
-
 	this->OutputConsole->printf("Fast Research Interface: Using initialization file \"%s\".\n", InitFileName);
 
 	// Thread configuration
@@ -214,6 +213,7 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 										,	&AttributesKRCCommunicationThread
 										,	&KRCCommunicationThreadMain
 										,	this);
+
 	if (FuntionResult != EOK)
 	{
 		this->OutputConsole->printf("FastResearchInterface::FastResearchInterface(): ERROR, could not start the KRC communication thread (Result: %d).\n", FuntionResult);
@@ -222,6 +222,7 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 	}
 
 	pthread_mutex_lock(&(this->MutexForThreadCreation));
+
 	while (!ThreadCreated)
 	{
 		pthread_cond_wait (&(this->CondVarForThreadCreation), &(this->MutexForThreadCreation));
@@ -229,6 +230,7 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 
 	ThreadCreated	=	false;
 	pthread_mutex_unlock(&(this->MutexForThreadCreation));
+
 	if (strlen(this->LoggingPath) > 0)
 	{
 		if (strcmp(&(this->LoggingPath[strlen(this->LoggingPath) - 1]), OS_FOLDER_SEPARATOR) != 0)
