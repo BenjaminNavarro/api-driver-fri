@@ -11,25 +11,14 @@ declare_PID_Package(	AUTHOR 		Benjamin Navarro
 			ADDRESS 	git@rob-dev.lirmm.fr:kuka-lwr/api-driver-fri.git
 			YEAR 		2015
 			LICENSE 	CeCILL-C
-			DESCRIPTION "Wrapper for the FRI library"
+			DESCRIPTION 	"Wrapper for the FRI library"
 		)
 
-set_PID_Package_Version(0 2 0)
+set_PID_Package_Version(0 1 1)
 
 add_PID_Package_Category(driver/fri)
 
-if(APPLE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__MACOS__ m64")
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__MACOS__ -m64")
-elseif(UNIX)
-	if(${PROJECT_NAME}_ARCH EQUAL 32)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LINUX__")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__LINUX__")
-	elseif(${PROJECT_NAME}_ARCH EQUAL 64)
-		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__LINUX__ -m64")
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__LINUX__ -m64")
-	endif()
-endif()
+find_package(Threads REQUIRED) #system dependency on threads
 
 
 build_PID_Package()

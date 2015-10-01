@@ -1,14 +1,33 @@
 
 #declare library components
-declare_PID_Component(
-	SHARED_LIB 
-	NAME fri-driver 
-	DIRECTORY api_driver_fri
-	RUNTIME_RESOURCES 471-FRI-Driver-2ms.init 471-FRI-Driver-5ms.init 472-FRI-Driver-2ms.init 472-FRI-Driver-5ms.init)
 
-declare_PID_Component_Dependency(
-	COMPONENT fri-driver
-	EXPORTED_DEFINITIONS __LINUX__)
+if(APPLE)
+	declare_PID_Component(
+		SHARED_LIB 
+		NAME fri-driver 
+		DIRECTORY api_driver_fri
+		EXPORTED DEFINITIONS __MACOS__ 	
+		INTERNAL COMPILER_OPTIONS m64
+		RUNTIME_RESOURCES fri_configurations)
+
+elseif(UNIX)
+	if(${PROJECT_NAME}_ARCH EQUAL 32)
+		declare_PID_Component(
+			SHARED_LIB 
+			NAME fri-driver 
+			DIRECTORY api_driver_fri
+			EXPORTED DEFINITIONS __LINUX__
+			RUNTIME_RESOURCES fri_configurations)
+	elseif(${PROJECT_NAME}_ARCH EQUAL 64)
+		declare_PID_Component(
+			SHARED_LIB 
+			NAME fri-driver 
+			DIRECTORY api_driver_fri
+			EXPORTED DEFINITIONS __LINUX__ 
+			INTERNAL COMPILER_OPTIONS -m64 
+			RUNTIME_RESOURCES fri_configurations)
+	endif()
+endif()
 
 #find_package (Threads)
 declare_PID_Component_Dependency(
