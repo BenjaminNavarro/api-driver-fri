@@ -8,15 +8,16 @@ PROJECT(api-driver-fri)
 declare_PID_Package(	AUTHOR 		Benjamin Navarro
 			INSTITUTION	LIRMM
 			MAIL		navarro@lirmm.fr
-			ADDRESS 	git@rob-dev.lirmm.fr:kuka-lwr/api-driver-fri.git
+			ADDRESS 	git@gite.lirmm.fr:kuka-lwr/api-driver-fri.git
 			YEAR 		2015
 			LICENSE 	CeCILL-C
 			DESCRIPTION 	"Wrapper for the FRI library"
 		)
 
-set_PID_Package_Version(0 2 0)
 
-add_PID_Package_Category(driver/fri)
+set_PID_Package_Version(0 2 0)
+add_PID_Package_Author(AUTHOR Robin Passama INSTITUTION LIRMM)
+add_PID_Package_Category(arm/kuka-lwr)
 
 find_package(Threads REQUIRED) #system dependency on threads
 
