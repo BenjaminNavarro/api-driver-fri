@@ -15,7 +15,7 @@ declare_PID_Package(
 			DESCRIPTION "Wrapper for the FRI library"
 		)
 
-set_PID_Package_Version(0 2 0)
+set_PID_Package_Version(0 3 0)
 add_PID_Package_Author(AUTHOR Robin Passama INSTITUTION LIRMM)
 add_PID_Package_Category(arm/kuka-lwr)
 
