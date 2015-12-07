@@ -418,6 +418,37 @@ public:
 		}
 	}
 
+//  ---------------------- Doxygen info ----------------------
+//! \fn void GetCurrentMassMatrix(float **MassMatrix)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetCurrentMassMatrix()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetCurrentMassMatrix()
+//!
+//! \sa FRIDataReceivedFromKRC
+//  ----------------------------------------------------------
+	void GetCurrentMassMatrix(float **MassMatrix) {
+		this->FRI->GetCurrentMassMatrix(MassMatrix);
+	}
+
+
+//  ---------------------- Doxygen info ----------------------
+//! \fn void GetCurrentGravityVector(float *GravityVector)
+//!
+//! \brief
+//! \copybrief FastResearchInterface::GetCurrentGravityVector()
+//!
+//! \details
+//! \copydetails FastResearchInterface::GetCurrentGravityVector()
+//!
+//! \sa FRIDataReceivedFromKRC
+//  ----------------------------------------------------------
+	void GetCurrentGravityVector(float *GravityVector) {
+		this->FRI->GetCurrentGravityVector(GravityVector);
+	}
+
 
 //  ---------------------- Doxygen info ----------------------
 //! \fn inline int WaitForKRCTick(const unsigned int &TimeoutValueInMicroSeconds = 0)
