@@ -1,5 +1,5 @@
 
-Software license for the software named : api-driver-fri-rt
+Software license for the software named : api-driver-fri
 
 Software description : Wrapper for the FRI library
 Copyright (C) 2015  Benjamin Navarro (LIRMM) Robin Passama (LIRMM)
