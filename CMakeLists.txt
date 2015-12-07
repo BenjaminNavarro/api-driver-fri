@@ -3,7 +3,7 @@ set(WORKSPACE_DIR ${CMAKE_SOURCE_DIR}/../.. CACHE PATH "root of the packages wor
 list(APPEND CMAKE_MODULE_PATH ${WORKSPACE_DIR}/share/cmake/system) # using generic scripts/modules of the workspace
 include(Package_Definition NO_POLICY_SCOPE)
 
-PROJECT(api-driver-fri)
+PROJECT(api-driver-fri-rt)
 
 declare_PID_Package(	
 			AUTHOR 		Benjamin Navarro
