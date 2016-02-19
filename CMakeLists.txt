@@ -16,10 +16,16 @@ declare_PID_Package(
 		)
 
 set_PID_Package_Version(0 4 0)
+
+check_PID_Platform(NAME xeno64 OS linux ARCH 64 CONFIGURATION xenomai posix)
+check_PID_Platform(NAME xeno32 OS linux ARCH 32 CONFIGURATION xenomai posix)
+check_PID_Platform(NAME linux64 OS linux ARCH 64 CONFIGURATION posix)
+check_PID_Platform(NAME linux32 OS linux ARCH 32 CONFIGURATION posix)
+check_PID_Platform(NAME macosx64 OS macosx ARCH 64 CONFIGURATION posix)
+
 add_PID_Package_Author(AUTHOR Robin Passama INSTITUTION LIRMM)
 add_PID_Package_Category(arm/kuka-lwr)
 
-find_package(Threads REQUIRED) #system dependency on threads
 
 build_PID_Package()
 
