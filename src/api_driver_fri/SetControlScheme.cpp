@@ -93,6 +93,15 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 			this->SetKRLIntValue(14, 20);
 			break;
 		case FastResearchInterface::JOINT_TORQUE_CONTROL:
+			pthread_mutex_lock(&(this->MutexForControlData));
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags	=	0;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTPOS;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTTRQ;
+			pthread_mutex_unlock(&(this->MutexForControlData));
+
+			// let the KRL program start the joint impedance controller
+			this->SetKRLIntValue(14, 30);
+			break;
 		case FastResearchInterface::JOINT_IMPEDANCE_CONTROL:
 			pthread_mutex_lock(&(this->MutexForControlData));
 			this->CommandData.CommandValues.FRIRobotCommandDataFlags	=	0;
@@ -156,12 +165,12 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 			this->GetCommandedJointPositionOffsets(&(FloatValues[NUMBER_OF_JOINTS]));
 
 			// Regarding the documentation, we should do this
-			/* -------------------------------------------------------------
+			///* -------------------------------------------------------------
 			for (i = 0; i < NUMBER_OF_JOINTS; i++)
 			{
 				FloatValues[i] +=	FloatValues[i + NUMBER_OF_JOINTS];
 			}
-			------------------------------------------------------------- */
+			//------------------------------------------------------------- */
 
 			this->SetCommandedJointPositions(FloatValues);
 		}
