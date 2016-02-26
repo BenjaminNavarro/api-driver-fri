@@ -15,7 +15,7 @@ declare_PID_Package(
 			DESCRIPTION "Wrapper for the FRI library"
 		)
 
-set_PID_Package_Version(0 4 0)
+set_PID_Package_Version(0 5 0)
 
 check_PID_Platform(NAME xeno64 OS linux ARCH 64 CONFIGURATION xenomai posix)
 check_PID_Platform(NAME xeno32 OS linux ARCH 32 CONFIGURATION xenomai posix)
