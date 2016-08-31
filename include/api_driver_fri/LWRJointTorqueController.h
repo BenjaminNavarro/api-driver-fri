@@ -39,7 +39,7 @@
 //! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
 //! See the License for the specific language governing permissions and\n
 //! limitations under the License.\n
-//! 
+//!
 //  ----------------------------------------------------------
 //   For a convenient reading of this file's source code,
 //   please use a tab width of four characters.
@@ -77,7 +77,7 @@ public:
 //!
 //! \copydetails LWRBaseControllerInterface::LWRBaseControllerInterface()
 //  ----------------------------------------------------------
-	LWRJointTorqueController(const char *InitFileName):LWRBaseControllerInterface(InitFileName)
+	LWRJointTorqueController(const char *InitFileName) : LWRBaseControllerInterface(InitFileName)
 	{
 	}
 
@@ -104,13 +104,13 @@ public:
 //! \details
 //! \copydetails FastResearchInterface::StartRobot()
 //  ----------------------------------------------------------
-	inline int StartRobot(const float &TimeOutValueInSeconds	=	120.0)
+	inline int StartRobot(const float &TimeOutValueInSeconds    =   120.0)
 	{
 		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
 
 		// start the controller and switch to command mode
-		return(this->FRI->StartRobot(		FastResearchInterface::JOINT_TORQUE_CONTROL
-									 	,	TimeOutValueInSeconds));
+		return(this->FRI->StartRobot(       FastResearchInterface::JOINT_TORQUE_CONTROL
+		                                    ,   TimeOutValueInSeconds));
 	}
 
 //  ---------------------- Doxygen info ----------------------
@@ -122,7 +122,7 @@ public:
 //! \details
 //! \copydetails FastResearchInterface::StartRobot()
 //  ----------------------------------------------------------
-	inline int RestartWithPositionControl(const float &TimeOutValueInSeconds	=	120.0)
+	inline int RestartWithPositionControl(const float &TimeOutValueInSeconds    =   120.0)
 	{
 		float position[7];
 		this->FRI->GetMeasuredJointPositions(position);
@@ -131,10 +131,10 @@ public:
 		float pose[6];
 		this->FRI->GetMeasuredCartPose(pose);
 		this->FRI->SetCommandedCartPose(pose);
-		
+
 		// start the controller and switch to command mode
-		return(this->FRI->StartRobot(		FastResearchInterface::JOINT_POSITION_CONTROL
-									 	,	TimeOutValueInSeconds));
+		return(this->FRI->StartRobot(       FastResearchInterface::JOINT_POSITION_CONTROL
+		                                    ,   TimeOutValueInSeconds));
 	}
 
 //  ---------------------- Doxygen info ----------------------
@@ -165,6 +165,35 @@ public:
 		return(this->FRI->SetCommandedJointTorques(CommandedJointTorques));
 	}
 
-};	// class LWRJointTorqueController
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedJointStiffness(const float *CommandedJointStiffness)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedJointStiffness()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedJointStiffness()
+	//  ----------------------------------------------------------
+	inline void SetCommandedJointStiffness(const float *CommandedJointStiffness)
+	{
+		return(this->FRI->SetCommandedJointStiffness(CommandedJointStiffness));
+	}
+
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedJointDamping(const float *CommandedJointDamping)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedJointDamping()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedJointDamping()
+	//  ----------------------------------------------------------
+	inline void SetCommandedJointDamping(const float *CommandedJointDamping)
+	{
+		return(this->FRI->SetCommandedJointDamping(CommandedJointDamping));
+	}
+
+};  // class LWRJointTorqueController
 
 #endif
