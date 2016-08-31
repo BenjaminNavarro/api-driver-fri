@@ -3,28 +3,29 @@
 # standard fri-driver
 if(macosx64)
 	declare_PID_Component(
-		SHARED_LIB 
-		NAME fri-driver 
+		SHARED_LIB
+		NAME fri-driver
 		DIRECTORY api_driver_fri
-		EXPORTED DEFINITIONS __MACOS__ 	
-		INTERNAL COMPILER_OPTIONS m64
+		EXPORTED DEFINITIONS __MACOS__
+		INTERNAL COMPILER_OPTIONS m64 -std=c++11
 		RUNTIME_RESOURCES fri_configurations)
 
 elseif(xeno32 OR linux32)
 	declare_PID_Component(
-		SHARED_LIB 
-		NAME fri-driver 
+		SHARED_LIB
+		NAME fri-driver
 		DIRECTORY api_driver_fri
 		EXPORTED DEFINITIONS __LINUX__
+		INTERNAL COMPILER_OPTIONS -std=c++11
 		RUNTIME_RESOURCES fri_configurations)
 
 elseif(linux64 OR xeno64)
 	declare_PID_Component(
-		SHARED_LIB 
+		SHARED_LIB
 		NAME fri-driver
 		DIRECTORY api_driver_fri
-		EXPORTED DEFINITIONS __LINUX__ 
-		INTERNAL COMPILER_OPTIONS -m64
+		EXPORTED DEFINITIONS __LINUX__
+		INTERNAL COMPILER_OPTIONS -m64 -std=c++11
 		RUNTIME_RESOURCES fri_configurations)
 endif()
 
@@ -38,7 +39,7 @@ if(xeno32) #RT driver can be compiled
 		NAME fri-driver-rt
 		DIRECTORY api_driver_fri
 		EXPORTED 	DEFINITIONS __LINUX__
-		INTERNAL 	COMPILER_OPTIONS ${xenomai_COMPILE_OPTIONS}
+		INTERNAL 	COMPILER_OPTIONS ${xenomai_COMPILE_OPTIONS} -std=c++11
 					LINKS ${xenomai_LINK_OPTIONS}
 		RUNTIME_RESOURCES fri_configurations)
 
@@ -49,10 +50,9 @@ elseif(xeno64)
 		NAME fri-driver-rt
 		DIRECTORY api_driver_fri
 		EXPORTED 	DEFINITIONS __LINUX__
-		INTERNAL 	COMPILER_OPTIONS -m64 ${xenomai_COMPILE_OPTIONS}
+		INTERNAL 	COMPILER_OPTIONS -m64 ${xenomai_COMPILE_OPTIONS} -std=c++11
 					LINKS ${xenomai_LINK_OPTIONS}
 		RUNTIME_RESOURCES fri_configurations)
 
 	declare_PID_Component_Dependency(COMPONENT fri-driver-rt LINKS SHARED ${posix_LINK_OPTIONS})
 endif()
-
