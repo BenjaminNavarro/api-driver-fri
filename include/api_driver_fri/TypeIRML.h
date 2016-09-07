@@ -48,8 +48,8 @@
 #ifndef __TypeIRML__
 #define __TypeIRML__
 
-#include <TypeIRMLMath.h>
-#include <TypeIRMLVector.h>
+#include "TypeIRMLMath.h"
+#include "TypeIRMLVector.h"
 #include <TypeIRMLInputParameters.h>
 #include <TypeIRMLOutputParameters.h>
 #include <TypeIRMLPolynomial.h>
