@@ -88,7 +88,7 @@ int FastResearchInterface::StopRobot(void)
 
 		if (ResultValue != EOK)
 		{
-			this->OutputConsole->printf("FastResearchInterface::StartRobot(): ERROR, the KRC unit does not respond anymore. Probably, the FRI was closed or there is no UDP connection anymore.");
+			this->OutputConsole->printf("FastResearchInterface::StopRobot(): ERROR, the KRC unit does not respond anymore. Probably, the FRI was closed or there is no UDP connection anymore.");
 			return(ENOTCONN);
 		}
 
@@ -103,7 +103,7 @@ int FastResearchInterface::StopRobot(void)
 
 		if (ResultValue != EOK)
 		{
-			this->OutputConsole->printf("FastResearchInterface::StartRobot(): ERROR, the KRC unit does not respond anymore. Probably, the FRI was closed or there is no UDP connection anymore.");
+			this->OutputConsole->printf("FastResearchInterface::StopRobot(): ERROR, the KRC unit does not respond anymore. Probably, the FRI was closed or there is no UDP connection anymore.");
 			return(ENOTCONN);
 		}
 
