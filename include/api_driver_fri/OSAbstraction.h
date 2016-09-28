@@ -34,7 +34,7 @@
 //! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
 //! See the License for the specific language governing permissions and\n
 //! limitations under the License.\n
-//! 
+//!
 //  ----------------------------------------------------------
 //   For a convenient reading of this file's source code,
 //   please use a tab width of four characters.
@@ -55,9 +55,9 @@
 //! Slash for non-Microsoft operating system or backslash for Microsoft operating systems
 //  ----------------------------------------------------------
 #if defined(WIN32) || defined(WIN64) || defined(_WIN64)
-#define OS_FOLDER_SEPARATOR	("\\")
+#define OS_FOLDER_SEPARATOR ("\\")
 #else
-#define OS_FOLDER_SEPARATOR	("/")
+#define OS_FOLDER_SEPARATOR ("/")
 #endif
 
 
@@ -80,7 +80,7 @@
 //!
 //! \sa CheckForKBCharacter()
 //  ----------------------------------------------------------
-unsigned char 	WaitForKBCharacter(bool *Abort = NULL);
+unsigned char   WaitForKBCharacter(bool *Abort = NULL);
 
 
 //  ---------------------- Doxygen info ----------------------
@@ -124,16 +124,6 @@ float GetSystemTimeInSeconds(const bool &Reset = false);
 // ##################################################################################
 // ##################################################################################
 // OS-specific
-
-// ############  W I N D O W S  #####################################################
-#if defined(WIN32) || defined(WIN64) || defined(_WIN64)
-#include <WindowsAbstraction.h>
-#endif
-
-// ################  Q N X  #########################################################
-#ifdef _NTO_
-#include <QNXAbstraction.h>
-#endif
 
 // ##############  L I N U X  #######################################################
 #ifdef __LINUX__

@@ -43,7 +43,7 @@
 //! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
 //! See the License for the specific language governing permissions and\n
 //! limitations under the License.\n
-//! 
+//!
 //  ----------------------------------------------------------
 //   For a convenient reading of this file's source code,
 //   please use a tab width of four characters.
@@ -108,7 +108,7 @@ public:
 //  ----------------------------------------------------------
 	LWRBaseControllerInterface(const char *InitFileName)
 	{
-		this->FRI			=	new FastResearchInterface(InitFileName);
+		this->FRI           =   new FastResearchInterface(InitFileName);
 	}
 
 
@@ -138,7 +138,45 @@ public:
 //! \details
 //! \copydetails FastResearchInterface::StartRobot()
 //  ----------------------------------------------------------
-	virtual inline int StartRobot(const float &TimeOutValueInSeconds) = 0;
+	inline int StartRobotInJointPositionControl(const float &TimeOutValueInSeconds) {
+		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
+
+		// start the controller and switch to command mode
+		return(this->FRI->StartRobot(      FastResearchInterface::JOINT_POSITION_CONTROL
+		                                   ,  TimeOutValueInSeconds));
+	}
+
+	inline int StartRobotInJointImpedanceControl(const float &TimeOutValueInSeconds) {
+		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
+
+		// start the controller and switch to command mode
+		return(this->FRI->StartRobot(      FastResearchInterface::JOINT_IMPEDANCE_CONTROL
+		                                   ,  TimeOutValueInSeconds));
+	}
+
+	inline int StartRobotInCartesianImpedanceControl(const float &TimeOutValueInSeconds) {
+		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
+
+		// start the controller and switch to command mode
+		return(this->FRI->StartRobot(      FastResearchInterface::CART_IMPEDANCE_CONTROL
+		                                   ,  TimeOutValueInSeconds));
+	}
+
+	inline int StartRobotInJointTorqueControl(const float &TimeOutValueInSeconds) {
+		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
+
+		// start the controller and switch to command mode
+		return(this->FRI->StartRobot(      FastResearchInterface::JOINT_TORQUE_CONTROL
+		                                   ,  TimeOutValueInSeconds));
+	}
+
+	inline int StartRobotInJointDynamicControl(const float &TimeOutValueInSeconds) {
+		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
+
+		// start the controller and switch to command mode
+		return(this->FRI->StartRobot(      FastResearchInterface::JOINT_DYNAMIC_CONTROL
+		                                   ,  TimeOutValueInSeconds));
+	}
 
 //  ---------------------- Doxygen info ----------------------
 //! \fn inline int StopRobot(void)
@@ -388,36 +426,6 @@ public:
 		}
 	}
 
-
-//  ---------------------- Doxygen info ----------------------
-//! \fn inline int GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
-//!
-//! \brief
-//! \copybrief FastResearchInterface::GetEstimatedExternalCartForcesAndTorques()
-//!
-//! \details
-//! \copydetails FastResearchInterface::GetEstimatedExternalCartForcesAndTorques()
-//!
-//! \return
-//! <ul>
-//! <li> \c ENOTCONN if no connection between the remote host and the KRC unit exists.
-//! <li> \c EOK if no error occurred.
-//! </ul>
-//  ----------------------------------------------------------
-	inline int GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
-	{
-		this->FRI->GetEstimatedExternalCartForcesAndTorques(EstimatedExternalCartForcesAndTorques);
-
-		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
-		{
-			return(ENOTCONN);
-		}
-		else
-		{
-			return(EOK);
-		}
-	}
-
 //  ---------------------- Doxygen info ----------------------
 //! \fn void GetCurrentMassMatrix(float **MassMatrix)
 //!
@@ -462,21 +470,6 @@ public:
 	inline int WaitForKRCTick(const unsigned int &TimeoutValueInMicroSeconds = 0)
 	{
 		return(this->FRI->WaitForKRCTick(TimeoutValueInMicroSeconds));
-	}
-
-
-//  ---------------------- Doxygen info ----------------------
-//! \fn inline int WaitForTimerTick(const unsigned int &TimeoutValueInMicroSeconds = 0)
-//!
-//! \brief
-//! \copybrief FastResearchInterface::WaitForTimerTick()
-//!
-//! \details
-//! \copydetails FastResearchInterface::WaitForTimerTick()
-//  ----------------------------------------------------------
-	inline int WaitForTimerTick(const unsigned int &TimeoutValueInMicroSeconds = 0)
-	{
-		return(this->FRI->WaitForTimerTick(TimeoutValueInMicroSeconds));
 	}
 
 
@@ -535,8 +528,8 @@ public:
 //  ----------------------------------------------------------
 	inline int printf(const char* Format, ...)
 	{
-		int			Result		=	0;
-		va_list		ListOfArguments;
+		int Result      =   0;
+		va_list ListOfArguments;
 
 		va_start(ListOfArguments, Format);
 		Result = FRI->printf(Format, ListOfArguments);
@@ -545,66 +538,195 @@ public:
 		return(Result);
 	}
 
+	void setCycleTime(float time) {
+		FRI->setCycleTime(time);
+	}
 
-//  ---------------------- Doxygen info ----------------------
-//! \fn inline int PrepareLogging(const char *FileIdentifier = NULL)
-//!
-//! \brief
-//! \copybrief FastResearchInterface::PrepareLogging()
-//!
-//! \details
-//! \copydetails FastResearchInterface::PrepareLogging()
-//  ----------------------------------------------------------
-	inline int PrepareLogging(const char *FileIdentifier = NULL)
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedJointPositions(const float *CommandedJointPositions)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedJointPositions()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedJointPositions()
+	//  ----------------------------------------------------------
+	inline void SetCommandedJointPositions(const float *CommandedJointPositions)
 	{
-		return(FRI->PrepareLogging(FileIdentifier));
+		if( this->FRI->GetControlScheme() == FastResearchInterface::JOINT_POSITION_CONTROL or
+		    this->FRI->GetControlScheme() == FastResearchInterface::JOINT_IMPEDANCE_CONTROL)
+		{
+			this->FRI->SetCommandedJointPositions(CommandedJointPositions);
+		}
+	}
+
+
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedJointTorques(const float *CommandedJointTorques)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedJointTorques()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedJointTorques()
+	//  ----------------------------------------------------------
+	inline void SetCommandedJointTorques(const float *CommandedJointTorques)
+	{
+		if( this->FRI->GetControlScheme() == FastResearchInterface::JOINT_IMPEDANCE_CONTROL or
+		    this->FRI->GetControlScheme() == FastResearchInterface::JOINT_TORQUE_CONTROL or
+		    this->FRI->GetControlScheme() == FastResearchInterface::JOINT_DYNAMIC_CONTROL)
+		{
+			this->FRI->SetCommandedJointTorques(CommandedJointTorques);
+		}
+	}
+
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedJointStiffness(const float *CommandedJointStiffness)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedJointStiffness()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedJointStiffness()
+	//  ----------------------------------------------------------
+	inline void SetCommandedJointStiffness(const float *CommandedJointStiffness)
+	{
+		if( this->FRI->GetControlScheme() == FastResearchInterface::JOINT_IMPEDANCE_CONTROL)
+		{
+			this->FRI->SetCommandedJointStiffness(CommandedJointStiffness);
+		}
 	}
 
 
 //  ---------------------- Doxygen info ----------------------
-//! \fn inline int StartLogging(void)
+//! \fn inline void SetCommandedJointDamping(const float *CommandedJointDamping)
 //!
 //! \brief
-//! \copybrief FastResearchInterface::StartLogging()
+//! \copybrief FastResearchInterface::SetCommandedJointDamping()
 //!
 //! \details
-//! \copydetails FastResearchInterface::StartLogging()
+//! \copydetails FastResearchInterface::SetCommandedJointDamping()
 //  ----------------------------------------------------------
-	inline int StartLogging(void)
+	inline void SetCommandedJointDamping(const float *CommandedJointDamping)
 	{
-		return(FRI->StartLogging());
+		if( this->FRI->GetControlScheme() == FastResearchInterface::JOINT_IMPEDANCE_CONTROL)
+		{
+			this->FRI->SetCommandedJointDamping(CommandedJointDamping);
+		}
+	}
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedCartPose(const float *CommandedCartPose)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedCartPose()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedCartPose()
+	//  ----------------------------------------------------------
+	inline void SetCommandedCartPose(const float *CommandedCartPose)
+	{
+		if( this->FRI->GetControlScheme() == FastResearchInterface::CART_IMPEDANCE_CONTROL)
+		{
+			this->FRI->SetCommandedCartPose(CommandedCartPose);
+		}
 	}
 
 
-//  ---------------------- Doxygen info ----------------------
-//! \fn inline int StopLogging(void)
-//!
-//! \brief
-//! \copybrief FastResearchInterface::StopLogging()
-//!
-//! \details
-//! \copydetails FastResearchInterface::StopLogging()
-//  ----------------------------------------------------------
-	inline int StopLogging(void)
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedCartForcesAndTorques(const float *CartForcesAndTorques)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedCartForcesAndTorques()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedCartForcesAndTorques()
+	//  ----------------------------------------------------------
+	inline void SetCommandedCartForcesAndTorques(const float *CartForcesAndTorques)
 	{
-		return(FRI->StopLogging());
+		if( this->FRI->GetControlScheme() == FastResearchInterface::CART_IMPEDANCE_CONTROL)
+		{
+			this->FRI->SetCommandedCartForcesAndTorques(CartForcesAndTorques);
+		}
 	}
 
 
-//  ---------------------- Doxygen info ----------------------
-//! \fn inline int WriteLoggingDataFile(void)
-//!
-//! \brief
-//! \copybrief FastResearchInterface::WriteLoggingDataFile()
-//!
-//! \details
-//! \copydetails FastResearchInterface::WriteLoggingDataFile()
-//  ----------------------------------------------------------
-	inline int WriteLoggingDataFile(void)
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedCartStiffness(const float *CommandedCartStiffness)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedCartStiffness()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedCartStiffness()
+	//  ----------------------------------------------------------
+	inline void SetCommandedCartStiffness(const float *CommandedCartStiffness)
 	{
-		return(FRI->WriteLoggingDataFile());
+		if( this->FRI->GetControlScheme() == FastResearchInterface::CART_IMPEDANCE_CONTROL)
+		{
+			this->FRI->SetCommandedCartStiffness(CommandedCartStiffness);
+		}
 	}
 
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void SetCommandedCartDamping(const float *CommandedCartDamping)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::SetCommandedCartDamping()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::SetCommandedCartDamping()
+	//  ----------------------------------------------------------
+	inline void SetCommandedCartDamping(const float *CommandedCartDamping)
+	{
+		if( this->FRI->GetControlScheme() == FastResearchInterface::CART_IMPEDANCE_CONTROL)
+		{
+			this->FRI->SetCommandedCartDamping(CommandedCartDamping);
+		}
+	}
+
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline void GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::GetEstimatedExternalCartForcesAndTorques()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::GetEstimatedExternalCartForcesAndTorques()
+	//  ----------------------------------------------------------
+	inline void GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
+	{
+		this->FRI->GetEstimatedExternalCartForcesAndTorques(EstimatedExternalCartForcesAndTorques);
+	}
+
+	//  ---------------------- Doxygen info ----------------------
+	//! \fn inline int RestartWithPositionControl(const float &TimeOutValueInSeconds	=	120.0)
+	//!
+	//! \brief
+	//! \copybrief FastResearchInterface::StartRobot()
+	//!
+	//! \details
+	//! \copydetails FastResearchInterface::StartRobot()
+	//  ----------------------------------------------------------
+	inline int RestartWithPositionControl(const float &TimeOutValueInSeconds    =   120.0)
+	{
+		float position[7], offsets[7];
+		this->FRI->GetMeasuredJointPositions(position);
+		this->FRI->GetCommandedJointPositionOffsets(offsets);
+		for (size_t i = 0; i < 7; i++) {
+			position[i] += offsets[i];
+		}
+		this->FRI->SetCommandedJointPositions(position);
+
+		// start the controller and switch to command mode
+		return(this->FRI->StartRobot(       FastResearchInterface::JOINT_POSITION_CONTROL
+		                                    ,   TimeOutValueInSeconds));
+	}
 
 protected:
 
@@ -615,8 +737,8 @@ protected:
 //! \brief
 //! A pointer to the actual object of the class FastResearchInterface
 //  ----------------------------------------------------------
-	FastResearchInterface		*FRI;
+	FastResearchInterface       *FRI;
 
-};	// class LWRBaseControllerInterface
+};  // class LWRBaseControllerInterface
 
 #endif

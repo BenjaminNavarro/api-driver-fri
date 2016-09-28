@@ -39,7 +39,7 @@
 //! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
 //! See the License for the specific language governing permissions and\n
 //! limitations under the License.\n
-//! 
+//!
 //  ----------------------------------------------------------
 //   For a convenient reading of this file's source code,
 //   please use a tab width of four characters.
@@ -59,30 +59,30 @@
 //
 int FastResearchInterface::WaitForKRCTick(const unsigned int &TimeoutValueInMicroSeconds)
 {
-	int		ReturnValue		=	EOK;
+	int ReturnValue     =   EOK;
 
 #ifdef _NTO_
 
-	struct timespec			TimeoutValue
-						,	CurrentTime;
+	struct timespec TimeoutValue
+	,   CurrentTime;
 
 	if (TimeoutValueInMicroSeconds > 0)
 	{
 		clock_gettime(CLOCK_REALTIME, &CurrentTime);
 
-		TimeoutValue.tv_nsec	=	(CurrentTime.tv_nsec + (TimeoutValueInMicroSeconds * 1000)) % 1000000000;
-		TimeoutValue.tv_sec		=	CurrentTime.tv_sec + (TimeoutValueInMicroSeconds % 1000000)
-										+ (CurrentTime.tv_nsec + (TimeoutValueInMicroSeconds * 1000)) / 1000000000;
+		TimeoutValue.tv_nsec    =   (CurrentTime.tv_nsec + (TimeoutValueInMicroSeconds * 1000)) % 1000000000;
+		TimeoutValue.tv_sec     =   CurrentTime.tv_sec + (TimeoutValueInMicroSeconds % 1000000)
+		                          + (CurrentTime.tv_nsec + (TimeoutValueInMicroSeconds * 1000)) / 1000000000;
 
 		pthread_mutex_lock(&(this->MutexForControlData));
 		while (!this->NewDataFromKRCReceived)
 		{
 
-			ReturnValue	=	 pthread_cond_timedwait(	&(this->CondVarForDataReceptionFromKRC)
-					   	 							,	&(this->MutexForControlData)
-					   	 							,	&TimeoutValue							);
+			ReturnValue =    pthread_cond_timedwait(    &(this->CondVarForDataReceptionFromKRC)
+			                                            ,   &(this->MutexForControlData)
+			                                            ,   &TimeoutValue                           );
 		}
-		this->NewDataFromKRCReceived	=	false;
+		this->NewDataFromKRCReceived    =   false;
 		pthread_mutex_unlock(&(this->MutexForControlData));
 
 		return(ReturnValue);
@@ -94,64 +94,12 @@ int FastResearchInterface::WaitForKRCTick(const unsigned int &TimeoutValueInMicr
 	while (!this->NewDataFromKRCReceived)
 	{
 
-		ReturnValue	=	 pthread_cond_wait(		&(this->CondVarForDataReceptionFromKRC)
-				   	 					   	,	&(this->MutexForControlData)			);
+		ReturnValue =    pthread_cond_wait(     &(this->CondVarForDataReceptionFromKRC)
+		                                        ,   &(this->MutexForControlData)            );
 	}
-	this->NewDataFromKRCReceived	=	false;
+	this->NewDataFromKRCReceived    =   false;
 	pthread_mutex_unlock(&(this->MutexForControlData));
 
-
-	return(ReturnValue);
-}
-
-
-
-// ****************************************************************
-// WaitForTimerTick()
-//
-int FastResearchInterface::WaitForTimerTick(const unsigned int &TimeoutValueInMicroSeconds)
-{
-	int		ReturnValue		=	0;
-
-#ifdef _NTO_
-
-	struct timespec			TimeoutValue
-						,	CurrentTime;
-
-	if (TimeoutValueInMicroSeconds > 0)
-	{
-		clock_gettime(CLOCK_REALTIME, &CurrentTime);
-
-		TimeoutValue.tv_nsec	=	(CurrentTime.tv_nsec + (TimeoutValueInMicroSeconds * 1000)) % 1000000000;
-		TimeoutValue.tv_sec		=	CurrentTime.tv_sec + (TimeoutValueInMicroSeconds % 1000000)
-										+ (CurrentTime.tv_nsec + (TimeoutValueInMicroSeconds * 1000)) / 1000000000;
-
-		pthread_mutex_lock(&(this->MutexForCondVarForTimer));
-		while (!this->TimerFlag)
-		{
-
-			ReturnValue	=	 pthread_cond_timedwait(	&(this->CondVarForTimer)
-					   	 							,	&(this->MutexForCondVarForTimer)
-					   	 							,	&TimeoutValue							);
-		}
-		this->TimerFlag	=	false;
-		pthread_mutex_unlock(&(this->MutexForCondVarForTimer));
-
-		return(ReturnValue);
-	}
-
-#endif
-
-	pthread_mutex_lock(&(this->MutexForCondVarForTimer));
-	while (!this->TimerFlag)
-	{
-
-		ReturnValue	=	 pthread_cond_wait(		&(this->CondVarForTimer)
-				   	 					   	,	&(this->MutexForCondVarForTimer)			);
-	}
-
-	this->TimerFlag	=	false;
-	pthread_mutex_unlock(&(this->MutexForCondVarForTimer));
 
 	return(ReturnValue);
 }

@@ -39,7 +39,7 @@
 //! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
 //! See the License for the specific language governing permissions and\n
 //! limitations under the License.\n
-//! 
+//!
 //  ----------------------------------------------------------
 //   For a convenient reading of this file's source code,
 //   please use a tab width of four characters.
@@ -59,11 +59,11 @@
 //
 int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 {
-	unsigned int		i				=	0;
+	unsigned int i               =   0;
 
-	int					ResultValue		=	0;
+	int ResultValue     =   0;
 
-	float				FloatValues[2 * NUMBER_OF_FRAME_ELEMENTS];
+	float FloatValues[2 * NUMBER_OF_FRAME_ELEMENTS];
 
 	memset(FloatValues, 0x0, 2 * NUMBER_OF_JOINTS * sizeof(float));
 
@@ -73,42 +73,36 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 		{
 		case FastResearchInterface::JOINT_POSITION_CONTROL:
 			pthread_mutex_lock(&(this->MutexForControlData));
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	=	0;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTPOS;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    =   0;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_JNTPOS;
 			pthread_mutex_unlock(&(this->MutexForControlData));
 
 			// let the KRL program start the joint position controller
 			this->SetKRLIntValue(14, 10);
 			break;
+
 		case FastResearchInterface::CART_IMPEDANCE_CONTROL:
 			pthread_mutex_lock(&(this->MutexForControlData));
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	=	0;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_CARTPOS;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_TCPFT;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_CARTSTIFF;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_CARTDAMP;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    =   0;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_CARTPOS;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_TCPFT;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_CARTSTIFF;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_CARTDAMP;
 			pthread_mutex_unlock(&(this->MutexForControlData));
 
 			// let the KRL program start the Cartesian impedance controller
 			this->SetKRLIntValue(14, 20);
 			break;
-		case FastResearchInterface::JOINT_TORQUE_CONTROL:
-			pthread_mutex_lock(&(this->MutexForControlData));
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	=	0;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTPOS;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTTRQ;
-			pthread_mutex_unlock(&(this->MutexForControlData));
 
-			// let the KRL program start the joint impedance controller
-			this->SetKRLIntValue(14, 30);
-			break;
 		case FastResearchInterface::JOINT_IMPEDANCE_CONTROL:
+		case FastResearchInterface::JOINT_TORQUE_CONTROL:
+		case FastResearchInterface::JOINT_DYNAMIC_CONTROL:
 			pthread_mutex_lock(&(this->MutexForControlData));
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	=	0;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTPOS;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTTRQ;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTSTIFF;
-			this->CommandData.CommandValues.FRIRobotCommandDataFlags	|=	MASK_CMD_JNTDAMP;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    =   0;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_JNTPOS;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_JNTTRQ;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_JNTSTIFF;
+			this->CommandData.CommandValues.FRIRobotCommandDataFlags    |=  MASK_CMD_JNTDAMP;
 			pthread_mutex_unlock(&(this->MutexForControlData));
 
 			// let the KRL program start the joint impedance controller
@@ -124,12 +118,12 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 			this->SetCommandedCartForcesAndTorques(FloatValues);
 			for (i = 0; i < NUMBER_OF_FRAME_ELEMENTS; i++)
 			{
-				FloatValues[i]	=	(float)0.7;
+				FloatValues[i]  =   (float)0.7;
 			}
 			this->SetCommandedCartDamping(FloatValues);
 			for (i = 0; i < NUMBER_OF_FRAME_ELEMENTS; i++)
 			{
-				FloatValues[i]	=	(i < 3)?(1000.0):(100.0);
+				FloatValues[i]  =   (i < 3) ? (1000.0) : (100.0);
 			}
 			this->SetCommandedCartStiffness(FloatValues);
 
@@ -138,11 +132,11 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 
 			// Regarding the documentation, we should do this
 			/* -------------------------------------------------------------
-			for (i = 0; i < NUMBER_OF_FRAME_ELEMENTS; i++)
-			{
-				FloatValues[i]	+=	FloatValues[i + NUMBER_OF_FRAME_ELEMENTS];
-			}
-			//------------------------------------------------------------- */
+			   for (i = 0; i < NUMBER_OF_FRAME_ELEMENTS; i++)
+			   {
+			    FloatValues[i]	+=	FloatValues[i + NUMBER_OF_FRAME_ELEMENTS];
+			   }
+			   //------------------------------------------------------------- */
 
 			this->SetCommandedCartPose(FloatValues);
 		}
@@ -151,11 +145,23 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 			this->SetCommandedJointTorques(FloatValues);
 			if (ControlScheme == FastResearchInterface::JOINT_TORQUE_CONTROL)
 			{
+				// setting this value to zero turns on the dynamic model
+				// after friStart() has been called
+				this->SetKRLIntValue(13, 0);
+				this->SetCommandedJointDamping(FloatValues);
+				this->SetCommandedJointStiffness(FloatValues);
+			}
+			else if (ControlScheme == FastResearchInterface::JOINT_DYNAMIC_CONTROL)
+			{
 				// setting this value to one turns off the dynamic model
 				// after friStart() has been called
 				this->SetKRLIntValue(13, 1);
 				this->SetCommandedJointDamping(FloatValues);
 				this->SetCommandedJointStiffness(FloatValues);
+
+				float gravity_torques[7];
+				this->GetCurrentGravityVector(gravity_torques);
+				this->SetCommandedJointTorques(gravity_torques);
 			}
 			else
 			{
@@ -168,7 +174,7 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 			///* -------------------------------------------------------------
 			for (i = 0; i < NUMBER_OF_JOINTS; i++)
 			{
-				FloatValues[i] +=	FloatValues[i + NUMBER_OF_JOINTS];
+				FloatValues[i] +=   FloatValues[i + NUMBER_OF_JOINTS];
 			}
 			//------------------------------------------------------------- */
 
@@ -177,9 +183,9 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 
 		// wait for the next data telegram of the KRC unit
 		pthread_mutex_lock(&(this->MutexForControlData));
-		this->NewDataFromKRCReceived	=	false;
+		this->NewDataFromKRCReceived    =   false;
 		pthread_mutex_unlock(&(this->MutexForControlData));
-		ResultValue	=	this->WaitForKRCTick(((unsigned int)(this->CycleTime * 3000000.0)));
+		ResultValue =   this->WaitForKRCTick(((unsigned int)(this->CycleTime * 3000000.0)));
 
 		if (ResultValue != EOK)
 		{

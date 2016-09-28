@@ -39,7 +39,7 @@
 //! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
 //! See the License for the specific language governing permissions and\n
 //! limitations under the License.\n
-//! 
+//!
 //  ----------------------------------------------------------
 //   For a convenient reading of this file's source code,
 //   please use a tab width of four characters.
@@ -59,10 +59,10 @@
 
 
 
-#define MAX_ROBOT_NAME_LENGTH				256
-#define MAX_OUTPUT_PATH_LENGTH				256
-#define MAX_FILE_NAME_LENGTH				256
-#define SIZE_OF_ROBOT_STATE_STRING			4096
+#define MAX_ROBOT_NAME_LENGTH               256
+#define MAX_OUTPUT_PATH_LENGTH              256
+#define MAX_FILE_NAME_LENGTH                256
+#define SIZE_OF_ROBOT_STATE_STRING          4096
 
 
 // ****************************************************************
@@ -70,66 +70,35 @@
 //
 FastResearchInterface::FastResearchInterface(const char *InitFileName)
 {
-	int					ParameterCount						=	0
-					,	FuntionResult						=	0;
+	int FuntionResult                       =   0;
 
-	struct sched_param		SchedulingParamsKRCCommunicationThread
-						,	SchedulingParamsTimerThread
-						,	SchedulingParamsMainThread;
+	struct sched_param SchedulingParamsKRCCommunicationThread
+	,   SchedulingParamsMainThread;
 
-	pthread_attr_t			AttributesKRCCommunicationThread
-						,	AttributesTimerThread;
+	pthread_attr_t AttributesKRCCommunicationThread;
 
-	this->RobotName				=	new char[MAX_ROBOT_NAME_LENGTH];
-	this->LoggingPath			=	new char[MAX_OUTPUT_PATH_LENGTH];
-	this->LoggingFileName		=	new char[MAX_FILE_NAME_LENGTH];
-	this->RobotStateString		=	new char[SIZE_OF_ROBOT_STATE_STRING];
+	this->PriorityKRCCommunicationThread    = 98;
+	this->PriorityMainThread                = 50;
+	this->PriorityOutputConsoleThread       = 5;
 
-	memset((void*)(this->RobotName)				, 0x0	, MAX_ROBOT_NAME_LENGTH			* sizeof(char));
-	memset((void*)(this->LoggingPath)			, 0x0	, MAX_OUTPUT_PATH_LENGTH		* sizeof(char));
-	memset((void*)(this->LoggingFileName)		, 0x0	, MAX_FILE_NAME_LENGTH			* sizeof(char));
-	memset((void*)(this->RobotStateString)		, 0x0	, SIZE_OF_ROBOT_STATE_STRING	* sizeof(char));
+	this->CycleTime                         = 0.005; // TODO Default value, can be change via ()
 
-	ParameterCount	=	this->ReadInitFile(InitFileName);
+	this->OutputConsole                     =   new Console(PriorityOutputConsoleThread);
 
-	if (ParameterCount == -1)
-	{
-		fprintf(stderr, "FastResearchInterface::FastResearchInterface(): ERROR, an initialization file name is required! QUITTING.\n");
-		getchar();
-		exit(EXIT_FAILURE); // terminates the process
-	}
+	this->KRCCommunicationThreadIsRunning   =   true;
+	this->NewDataFromKRCReceived            =   false;
+	this->ThreadCreated                     =   false;
 
-	if (ParameterCount < 9)
-	{
-		fprintf(stderr, "FastResearchInterface::FastResearchInterface(): ERROR, initialization file \'%s\' is incomplete. Only %d parameters are given. QUITTING.\n", InitFileName, ParameterCount);
-		getchar();
-		exit(EXIT_FAILURE); // terminates the process
-	}
+	this->CurrentControlScheme              =   FastResearchInterface::JOINT_POSITION_CONTROL;
 
-	this->OutputConsole						=	new Console(PriorityOutputConsoleThread);
+	memset((void*)(&(this->CommandData)), 0x0,                                       sizeof(FRIDataSendToKRC)    );
+	memset((void*)(&(this->ReadData)), 0x0,                                       sizeof(FRIDataReceivedFromKRC)  );
 
-	this->TimerThreadIsRunning				=	true;
-	this->KRCCommunicationThreadIsRunning	=	true;
-	this->TimerFlag							=	false;
-	this->NewDataFromKRCReceived			=	false;
-	this->LoggingIsActive					=	false;
-	this->ThreadCreated						=	false;	
+	pthread_mutex_init(&(this->MutexForControlData              ), NULL);
+	pthread_mutex_init(&(this->MutexForThreadCreation           ), NULL);
 
-	this->LoggingState						=	FastResearchInterface::WriteLoggingDataFileCalled;
-
-	this->CurrentControlScheme				=	FastResearchInterface::JOINT_POSITION_CONTROL;
-
-	memset((void*)(&(this->CommandData))	, 0x0	,										sizeof(FRIDataSendToKRC)	);
-	memset((void*)(&(this->ReadData))		, 0x0	,										sizeof(FRIDataReceivedFromKRC)	);
-
-	pthread_mutex_init(&(this->MutexForControlData				), NULL);
-	pthread_mutex_init(&(this->MutexForCondVarForTimer			), NULL);
-	pthread_mutex_init(&(this->MutexForLogging					), NULL);
-	pthread_mutex_init(&(this->MutexForThreadCreation			), NULL);
-
-	pthread_cond_init(&(this->CondVarForTimer					), NULL);
-	pthread_cond_init(&(this->CondVarForDataReceptionFromKRC	), NULL);
-	pthread_cond_init(&(this->CondVarForThreadCreation			), NULL);
+	pthread_cond_init(&(this->CondVarForDataReceptionFromKRC    ), NULL);
+	pthread_cond_init(&(this->CondVarForThreadCreation          ), NULL);
 
 	this->OutputConsole->printf("Fast Research Interface: Using initialization file \"%s\".\n", InitFileName);
 
@@ -146,73 +115,39 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 	//		stackaddr			NULL
 
 	// Set the priorities from the initialization file.
-	SchedulingParamsKRCCommunicationThread.sched_priority	=	PriorityKRCCommunicationThread						;
-	SchedulingParamsTimerThread.sched_priority				=	PriorityTimerThread									;
-	SchedulingParamsMainThread.sched_priority				=	PriorityMainThread									;
+	SchedulingParamsKRCCommunicationThread.sched_priority   =   PriorityKRCCommunicationThread;
+	SchedulingParamsMainThread.sched_priority               =   PriorityMainThread;
 
-	pthread_attr_init(&AttributesKRCCommunicationThread															)	;
-	pthread_attr_init(&AttributesTimerThread																	)	;
+	pthread_attr_init(&AttributesKRCCommunicationThread                                                         );
 
 	// Set the thread scheduling policy attribute to round robin
 	// default is OTHER which equals RR in QNX 6.5.0.
-	pthread_attr_setschedpolicy(&AttributesKRCCommunicationThread	,	SCHED_FIFO								)	;
-	pthread_attr_setschedpolicy(&AttributesTimerThread				,	SCHED_FIFO								)	;
+	pthread_attr_setschedpolicy(&AttributesKRCCommunicationThread,   SCHED_FIFO                              );
 
 	// Set the thread's inherit-scheduling attribute to explicit
 	// otherwise, the scheduling parameters Cannot be changed (e.g., priority)
-	pthread_attr_setinheritsched(&AttributesKRCCommunicationThread	,	PTHREAD_EXPLICIT_SCHED					)	;
-	pthread_attr_setinheritsched(&AttributesTimerThread				,	PTHREAD_EXPLICIT_SCHED					)	;
+	pthread_attr_setinheritsched(&AttributesKRCCommunicationThread,   PTHREAD_EXPLICIT_SCHED                  );
 
-	pthread_attr_setschedparam(&AttributesKRCCommunicationThread	,	&SchedulingParamsKRCCommunicationThread	)	;
-	pthread_attr_setschedparam(&AttributesTimerThread				,	&SchedulingParamsTimerThread			)	;
+	pthread_attr_setschedparam(&AttributesKRCCommunicationThread,   &SchedulingParamsKRCCommunicationThread );
 
 	// this is supposed to become the message thread
 	// i.e. we have to set our own scheduling parameters
 	this->MainThread = pthread_self();
 	pthread_setschedparam(this->MainThread, SCHED_FIFO, &SchedulingParamsMainThread);
-	
+
 #if defined(WIN32) || defined(WIN64) || defined(_WIN64)
 
 	if(!SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS))
 	{
 		this->OutputConsole->printf("FastResearchInterface::FastResearchInterface(): ERROR, could not set process priority.\n");
-	} 
+	}
 
 #endif
 
-
-#ifdef _NTO_
-
-	FuntionResult	=	pthread_create(		&TimerThread
-										,	&AttributesTimerThread
-										,	&TimerThreadMain
-										,	this);
-										
-								
-
-	if (FuntionResult != EOK)
-	{
-		this->OutputConsole->printf("FastResearchInterface::FastResearchInterface(): ERROR, could not start the timer thread (Result: %d).\n", FuntionResult);
-		getchar();
-		exit(EXIT_FAILURE); // terminates the process
-	}
-
-	pthread_mutex_lock(&(this->MutexForThreadCreation));	
-
-	while (!ThreadCreated)
-	{
-		pthread_cond_wait (&(this->CondVarForThreadCreation), &(this->MutexForThreadCreation));
-	}
-
-	ThreadCreated	=	false;
-	pthread_mutex_unlock(&(this->MutexForThreadCreation));	
-
-#endif		
-
-	FuntionResult	=	pthread_create(		&KRCCommunicationThread
-										,	&AttributesKRCCommunicationThread
-										,	&KRCCommunicationThreadMain
-										,	this);
+	FuntionResult   =   pthread_create(     &KRCCommunicationThread
+	                                        ,   &AttributesKRCCommunicationThread
+	                                        ,   &KRCCommunicationThreadMain
+	                                        ,   this);
 
 	if (FuntionResult != EOK)
 	{
@@ -228,30 +163,8 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 		pthread_cond_wait (&(this->CondVarForThreadCreation), &(this->MutexForThreadCreation));
 	}
 
-	ThreadCreated	=	false;
+	ThreadCreated   =   false;
 	pthread_mutex_unlock(&(this->MutexForThreadCreation));
-
-	if (strlen(this->LoggingPath) > 0)
-	{
-		if (strcmp(&(this->LoggingPath[strlen(this->LoggingPath) - 1]), OS_FOLDER_SEPARATOR) != 0)
-		{
-			strcat(this->LoggingPath, OS_FOLDER_SEPARATOR);
-		}
-	}
-	else
-	{
-		sprintf(this->LoggingPath, ".%s\0", OS_FOLDER_SEPARATOR);
-	}
-
-	if (strlen(this->LoggingFileName) == 0)
-	{
-		sprintf(this->LoggingFileName, "FRI.dat\0");
-	}
-
-	this->DataLogger	=	new DataLogging(	this->RobotName
-											,	this->LoggingPath
-											,	this->LoggingFileName
-											,	this->NumberOfLoggingFileEntries);
 }
 
 
@@ -260,7 +173,7 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 //
 FastResearchInterface::~FastResearchInterface(void)
 {
-	int		ResultValue		=	0;
+	int ResultValue     =   0;
 
 	// Bad workaround for the KUKA friUDP class, which unfortunately
 	// does not use select() for sockets in order to enable timeouts.
@@ -297,9 +210,9 @@ FastResearchInterface::~FastResearchInterface(void)
 
 		// wait for the next data telegram of the KRC unit
 		pthread_mutex_lock(&(this->MutexForControlData));
-		this->NewDataFromKRCReceived	=	false;
+		this->NewDataFromKRCReceived    =   false;
 		pthread_mutex_unlock(&(this->MutexForControlData));
-		ResultValue	=	this->WaitForKRCTick(((unsigned int)(this->CycleTime * 3000000.0)));
+		ResultValue =   this->WaitForKRCTick(((unsigned int)(this->CycleTime * 3000000.0)));
 
 		if (ResultValue != EOK)
 		{
@@ -336,20 +249,11 @@ FastResearchInterface::~FastResearchInterface(void)
 	this->TimerThreadIsRunning = false;
 	pthread_mutex_unlock(&(this->MutexForCondVarForTimer));
 	pthread_join(this->TimerThread, NULL);
-	
-#endif	
 
-	if (this->LoggingState != FastResearchInterface::WriteLoggingDataFileCalled)
-	{
-		this->WriteLoggingDataFile();
-	}
+#endif
 
-	delete[]	this->RobotName			;
-	delete[]	this->LoggingPath		;
-	delete[]	this->LoggingFileName	;
-	delete[]	this->RobotStateString	;
-	delete		this->DataLogger		;
-	delete		this->OutputConsole		;
+	delete[]    this->RobotStateString;
+	delete      this->OutputConsole;
 }
 
 
@@ -358,9 +262,9 @@ FastResearchInterface::~FastResearchInterface(void)
 //
 int FastResearchInterface::printf(const char* Format,...)
 {
-	int			Result		=	0;
+	int Result      =   0;
 
-	va_list		ListOfArguments;
+	va_list ListOfArguments;
 
 	va_start(ListOfArguments, Format);
 
@@ -371,3 +275,11 @@ int FastResearchInterface::printf(const char* Format,...)
 	return(Result);
 }
 
+
+void FastResearchInterface::setCycleTime(float time) {
+	this->CycleTime = time;
+}
+
+int FastResearchInterface::GetControlScheme() const {
+	return CurrentControlScheme;
+}
