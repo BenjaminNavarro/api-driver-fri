@@ -160,8 +160,8 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 				this->SetCommandedJointDamping(FloatValues);
 				this->SetCommandedJointStiffness(FloatValues);
 
-				float gravity_torques[7];
-				this->GetCurrentGravityVector(gravity_torques);
+				float gravity_torques[7] = {};
+				// this->GetCurrentGravityVector(gravity_torques);
 				this->SetCommandedJointTorques(gravity_torques);
 			}
 			else

@@ -69,7 +69,7 @@ using namespace std;
 // ****************************************************************
 // Constructor
 //
-FastResearchInterface::FastResearchInterface()
+FastResearchInterface::FastResearchInterface(float cycle_time)
 {
 	int FuntionResult                       =   0;
 
@@ -82,7 +82,7 @@ FastResearchInterface::FastResearchInterface()
 	this->PriorityMainThread                = 50;
 	this->PriorityOutputConsoleThread       = 5;
 
-	this->CycleTime                         = 0.005; // TODO Default value, can be change via ()
+	this->CycleTime                         = cycle_time;
 
 	this->OutputConsole                     =   new Console(PriorityOutputConsoleThread);
 
@@ -136,15 +136,6 @@ FastResearchInterface::FastResearchInterface()
 	// i.e. we have to set our own scheduling parameters
 	this->MainThread = pthread_self();
 	pthread_setschedparam(this->MainThread, SCHED_FIFO, &SchedulingParamsMainThread);
-
-#if defined(WIN32) || defined(WIN64) || defined(_WIN64)
-
-	if(!SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS))
-	{
-		this->OutputConsole->printf("FastResearchInterface::FastResearchInterface(): ERROR, could not set process priority.\n");
-	}
-
-#endif
 
 	FuntionResult   =   pthread_create(     &KRCCommunicationThread
 	                                        ,   &AttributesKRCCommunicationThread

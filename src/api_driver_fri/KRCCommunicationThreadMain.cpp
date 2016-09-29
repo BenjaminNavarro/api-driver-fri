@@ -52,6 +52,7 @@
 #include <sched.h>
 #include <string.h>
 #include <stdio.h>
+#include <cmath>
 #include <UDPSocket.h>
 #include <FRICommunication.h>
 #include <OSAbstraction.h>
@@ -75,6 +76,48 @@ void* FastResearchInterface::KRCCommunicationThreadMain(void *ObjectPointer)
 	FastResearchInterface           *ThisObject                     =   (FastResearchInterface*)ObjectPointer;
 
 	memset(ZeroVector, 0x0, NUMBER_OF_JOINTS * sizeof(float));
+
+	LocalCommandData.SharedKRLVariables.FRIIntegerValuesInKRC[0] = 0;
+	LocalCommandData.SharedKRLVariables.FRIIntegerValuesInKRC[1] = 0;
+
+	for(;; )
+	{
+		// receive data from the KRC unit
+		ResultValue =   KRC.ReceiveFRIDataFromKRC(&LocalReadData);
+
+		if (ResultValue != 0)
+		{
+			ThisObject->OutputConsole->printf("FastResearchInterface::KRCCommunicationThreadMain(): ERROR during the reception of a UDP data package.\n");
+		}
+
+		LocalCommandData    =   ThisObject->CommandData;
+
+		SequenceCounter++;
+		LocalCommandData.Header.FRISequenceCounterForUDPPackages    =   SequenceCounter;
+		LocalCommandData.Header.FRIReflectedSequenceCounterForUDPPackages   =   LocalReadData.Header.FRISequenceCounterForUDPPackages;
+		LocalCommandData.Header.FRIDatagramID   =   FRI_DATAGRAM_ID_CMD;
+		LocalCommandData.Header.FRIPackageSizeInBytes   =   sizeof(FRIDataSendToKRC);
+
+		if(LocalReadData.SharedKRLVariables.FRIIntegerValuesInKRC[0] == 1) {
+			LocalCommandData.SharedKRLVariables.FRIIntegerValuesInKRC[0] = 1;
+			LocalCommandData.SharedKRLVariables.FRIIntegerValuesInKRC[1] = int(round(ThisObject->CycleTime*1000.f));
+		}
+		else if(LocalReadData.SharedKRLVariables.FRIIntegerValuesInKRC[0] == 2) {
+			LocalCommandData.SharedKRLVariables.FRIIntegerValuesInKRC[0] = 0;
+			LocalCommandData.SharedKRLVariables.FRIIntegerValuesInKRC[1] = 0;
+		}
+		else if(LocalReadData.SharedKRLVariables.FRIIntegerValuesInKRC[0] == 3) {
+			break;
+		}
+
+		// send data to KRC unit
+		ResultValue                     =   KRC.SendFRIDataToKRC(&LocalCommandData);
+
+		if (ResultValue != 0)
+		{
+			ThisObject->OutputConsole->printf("FastResearchInterface::KRCCommunicationThreadMain(): ERROR during the sending of a UDP data package.\n");
+		}
+	}
 
 	pthread_mutex_lock(&(ThisObject->MutexForThreadCreation));
 	ThisObject->ThreadCreated   =   true;

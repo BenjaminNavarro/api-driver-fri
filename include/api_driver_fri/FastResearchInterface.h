@@ -161,7 +161,7 @@ public:
 //! \attention
 //! The call of the constructor does \b not fulfill any real-time requirements.
 //  ----------------------------------------------------------
-	FastResearchInterface();
+	FastResearchInterface(float cycle_time);
 
 
 //  ---------------------- Doxygen info ----------------------
@@ -189,7 +189,7 @@ public:
 //! \attention
 //! The call of the destructor does \b not fulfill any real-time requirements.
 //  ----------------------------------------------------------
-	~FastResearchInterface(void);
+	~FastResearchInterface();
 
 
 //  ---------------------- Doxygen info ----------------------

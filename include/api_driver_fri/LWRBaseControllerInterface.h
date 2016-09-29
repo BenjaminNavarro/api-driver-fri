@@ -106,9 +106,9 @@ public:
 //!
 //! \copydetails FastResearchInterface::FastResearchInterface()
 //  ----------------------------------------------------------
-	LWRBaseControllerInterface()
+	LWRBaseControllerInterface(float cycle_time)
 	{
-		this->FRI           =   new FastResearchInterface();
+		this->FRI           =   new FastResearchInterface(cycle_time);
 	}
 
 
@@ -554,11 +554,6 @@ public:
 
 		return(Result);
 	}
-
-	void setCycleTime(float time) {
-		FRI->setCycleTime(time);
-	}
-
 
 	//  ---------------------- Doxygen info ----------------------
 	//! \fn inline void SetCommandedJointPositions(const float *CommandedJointPositions)
