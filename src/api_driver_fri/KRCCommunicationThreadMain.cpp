@@ -56,13 +56,6 @@
 #include <FRICommunication.h>
 #include <OSAbstraction.h>
 
-
-#if defined(WIN32) || defined(WIN64) || defined(_WIN64) // \ToDo Make this clean through the OSAbstraction
-#include <Windows.h>
-#endif
-
-
-
 // ****************************************************************
 // KRCCommunicationThreadMain()
 //
@@ -82,11 +75,6 @@ void* FastResearchInterface::KRCCommunicationThreadMain(void *ObjectPointer)
 	FastResearchInterface           *ThisObject                     =   (FastResearchInterface*)ObjectPointer;
 
 	memset(ZeroVector, 0x0, NUMBER_OF_JOINTS * sizeof(float));
-
-#if defined(WIN32) || defined(WIN64) || defined(_WIN64)
-	// \ToDo Make this clean through the OSAbstraction
-	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
-#endif
 
 	pthread_mutex_lock(&(ThisObject->MutexForThreadCreation));
 	ThisObject->ThreadCreated   =   true;

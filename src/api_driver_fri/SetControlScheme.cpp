@@ -150,6 +150,7 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 				this->SetKRLIntValue(13, 0);
 				this->SetCommandedJointDamping(FloatValues);
 				this->SetCommandedJointStiffness(FloatValues);
+				this->SetCommandedJointTorques(FloatValues);
 			}
 			else if (ControlScheme == FastResearchInterface::JOINT_DYNAMIC_CONTROL)
 			{
@@ -165,6 +166,10 @@ int FastResearchInterface::SetControlScheme(const unsigned int &ControlScheme)
 			}
 			else
 			{
+				float stiffness[7] = {1000, 1000, 1000, 1000, 1000, 1000, 1000};
+				float damping[7] = {0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7};
+				this->SetCommandedJointDamping(stiffness);
+				this->SetCommandedJointStiffness(damping);
 				this->SetKRLIntValue(13, 0);
 			}
 			this->GetMeasuredJointPositions(&(FloatValues[0]));

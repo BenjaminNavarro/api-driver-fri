@@ -57,7 +57,8 @@
 #include <stdarg.h>
 #include <OSAbstraction.h>
 
-
+#include <iostream>
+using namespace std;
 
 #define MAX_ROBOT_NAME_LENGTH               256
 #define MAX_OUTPUT_PATH_LENGTH              256
@@ -68,7 +69,7 @@
 // ****************************************************************
 // Constructor
 //
-FastResearchInterface::FastResearchInterface(const char *InitFileName)
+FastResearchInterface::FastResearchInterface()
 {
 	int FuntionResult                       =   0;
 
@@ -91,6 +92,9 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 
 	this->CurrentControlScheme              =   FastResearchInterface::JOINT_POSITION_CONTROL;
 
+	this->RobotStateString      =   new char[SIZE_OF_ROBOT_STATE_STRING];
+	memset((void*)(this->RobotStateString), 0x0, SIZE_OF_ROBOT_STATE_STRING    * sizeof(char));
+
 	memset((void*)(&(this->CommandData)), 0x0,                                       sizeof(FRIDataSendToKRC)    );
 	memset((void*)(&(this->ReadData)), 0x0,                                       sizeof(FRIDataReceivedFromKRC)  );
 
@@ -99,8 +103,6 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 
 	pthread_cond_init(&(this->CondVarForDataReceptionFromKRC    ), NULL);
 	pthread_cond_init(&(this->CondVarForThreadCreation          ), NULL);
-
-	this->OutputConsole->printf("Fast Research Interface: Using initialization file \"%s\".\n", InitFileName);
 
 	// Thread configuration
 
@@ -171,7 +173,7 @@ FastResearchInterface::FastResearchInterface(const char *InitFileName)
 // ****************************************************************
 // Destructor
 //
-FastResearchInterface::~FastResearchInterface(void)
+FastResearchInterface::~FastResearchInterface()
 {
 	int ResultValue     =   0;
 
@@ -187,7 +189,7 @@ FastResearchInterface::~FastResearchInterface(void)
 	this->NewDataFromKRCReceived = false;
 	pthread_mutex_unlock(&(this->MutexForControlData));
 
-	delay(1 + 2 * (unsigned int)(this->CycleTime));
+	delay(100 + 2 * (unsigned int)(this->CycleTime));
 
 	pthread_mutex_lock(&(this->MutexForControlData));
 	if (this->NewDataFromKRCReceived)
@@ -241,16 +243,6 @@ FastResearchInterface::~FastResearchInterface(void)
 	}
 
 	pthread_join(this->KRCCommunicationThread, NULL);
-
-#ifdef _NTO_
-
-	// End the timer thread
-	pthread_mutex_lock(&(this->MutexForCondVarForTimer));
-	this->TimerThreadIsRunning = false;
-	pthread_mutex_unlock(&(this->MutexForCondVarForTimer));
-	pthread_join(this->TimerThread, NULL);
-
-#endif
 
 	delete[]    this->RobotStateString;
 	delete      this->OutputConsole;

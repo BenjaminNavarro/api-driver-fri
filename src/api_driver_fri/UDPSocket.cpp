@@ -129,9 +129,11 @@ void UDPSocket::Init(void)
 	KRCAddress.sin_addr.s_addr  =   htonl(INADDR_ANY);
 	KRCAddress.sin_port         =   htons(ServerPortNumber);
 
-	if (bind(UDPSocketNumber, (struct sockaddr *)&KRCAddress, sizeof(KRCAddress)) < 0)
+	int ret;
+	if ((ret = bind(UDPSocketNumber, (struct sockaddr *)&KRCAddress, sizeof(KRCAddress))) < 0)
 	{
-		fprintf(stderr, "ERROR: Cannot bind port %d.\n", ServerPortNumber);
+		fprintf(stderr, "ERROR: Cannot bind port %d., %d\n", ServerPortNumber, ret);
+		perror(NULL);
 		fflush(stderr);
 		this->Close();
 		exit(EXIT_FAILURE);

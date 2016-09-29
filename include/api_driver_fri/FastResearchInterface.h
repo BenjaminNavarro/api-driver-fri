@@ -161,7 +161,7 @@ public:
 //! \attention
 //! The call of the constructor does \b not fulfill any real-time requirements.
 //  ----------------------------------------------------------
-	FastResearchInterface(const char *InitFileName);
+	FastResearchInterface();
 
 
 //  ---------------------- Doxygen info ----------------------

@@ -5,7 +5,7 @@ include(Package_Definition NO_POLICY_SCOPE)
 
 PROJECT(api-driver-fri)
 
-declare_PID_Package(	
+declare_PID_Package(
 			AUTHOR 		Benjamin Navarro
 			INSTITUTION	LIRMM
 			MAIL		navarro@lirmm.fr
@@ -15,7 +15,7 @@ declare_PID_Package(
 			DESCRIPTION "Wrapper for the FRI library"
 		)
 
-set_PID_Package_Version(0 6 0)
+set_PID_Package_Version(1 0 0)
 
 check_PID_Platform(NAME xeno64 OS linux ARCH 64 CONFIGURATION xenomai posix)
 check_PID_Platform(NAME xeno32 OS linux ARCH 32 CONFIGURATION xenomai posix)
@@ -28,4 +28,3 @@ add_PID_Package_Category(arm/kuka-lwr)
 
 
 build_PID_Package()
-

@@ -106,9 +106,9 @@ public:
 //!
 //! \copydetails FastResearchInterface::FastResearchInterface()
 //  ----------------------------------------------------------
-	LWRBaseControllerInterface(const char *InitFileName)
+	LWRBaseControllerInterface()
 	{
-		this->FRI           =   new FastResearchInterface(InitFileName);
+		this->FRI           =   new FastResearchInterface();
 	}
 
 
@@ -123,7 +123,7 @@ public:
 //!
 //! \copydetails FastResearchInterface::~FastResearchInterface()
 //  ----------------------------------------------------------
-	~LWRBaseControllerInterface(void)
+	~LWRBaseControllerInterface()
 	{
 		delete this->FRI;
 	}
@@ -138,7 +138,7 @@ public:
 //! \details
 //! \copydetails FastResearchInterface::StartRobot()
 //  ----------------------------------------------------------
-	inline int StartRobotInJointPositionControl(const float &TimeOutValueInSeconds) {
+	inline int StartRobotInJointPositionControl(const float &TimeOutValueInSeconds = 20.f) {
 		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
 
 		// start the controller and switch to command mode
@@ -146,7 +146,7 @@ public:
 		                                   ,  TimeOutValueInSeconds));
 	}
 
-	inline int StartRobotInJointImpedanceControl(const float &TimeOutValueInSeconds) {
+	inline int StartRobotInJointImpedanceControl(const float &TimeOutValueInSeconds = 20.f) {
 		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
 
 		// start the controller and switch to command mode
@@ -154,7 +154,7 @@ public:
 		                                   ,  TimeOutValueInSeconds));
 	}
 
-	inline int StartRobotInCartesianImpedanceControl(const float &TimeOutValueInSeconds) {
+	inline int StartRobotInCartesianImpedanceControl(const float &TimeOutValueInSeconds = 20.f) {
 		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
 
 		// start the controller and switch to command mode
@@ -162,7 +162,7 @@ public:
 		                                   ,  TimeOutValueInSeconds));
 	}
 
-	inline int StartRobotInJointTorqueControl(const float &TimeOutValueInSeconds) {
+	inline int StartRobotInJointTorqueControl(const float &TimeOutValueInSeconds = 20.f) {
 		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
 
 		// start the controller and switch to command mode
@@ -170,7 +170,7 @@ public:
 		                                   ,  TimeOutValueInSeconds));
 	}
 
-	inline int StartRobotInJointDynamicControl(const float &TimeOutValueInSeconds) {
+	inline int StartRobotInJointDynamicControl(const float &TimeOutValueInSeconds = 20.f) {
 		this->printf("Please start up the robot now by using KUKA Control Panel.\n");
 
 		// start the controller and switch to command mode
@@ -437,8 +437,16 @@ public:
 //!
 //! \sa FRIDataReceivedFromKRC
 //  ----------------------------------------------------------
-	void GetCurrentMassMatrix(float **MassMatrix) {
+	int GetCurrentMassMatrix(float **MassMatrix) {
 		this->FRI->GetCurrentMassMatrix(MassMatrix);
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
 	}
 
 
@@ -453,8 +461,17 @@ public:
 //!
 //! \sa FRIDataReceivedFromKRC
 //  ----------------------------------------------------------
-	void GetCurrentGravityVector(float *GravityVector) {
+	int GetCurrentGravityVector(float *GravityVector) {
 		this->FRI->GetCurrentGravityVector(GravityVector);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
 	}
 
 
@@ -699,9 +716,18 @@ public:
 	//! \details
 	//! \copydetails FastResearchInterface::GetEstimatedExternalCartForcesAndTorques()
 	//  ----------------------------------------------------------
-	inline void GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
+	inline int GetEstimatedExternalCartForcesAndTorques(float *EstimatedExternalCartForcesAndTorques)
 	{
 		this->FRI->GetEstimatedExternalCartForcesAndTorques(EstimatedExternalCartForcesAndTorques);
+
+		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
+		{
+			return(ENOTCONN);
+		}
+		else
+		{
+			return(EOK);
+		}
 	}
 
 	//  ---------------------- Doxygen info ----------------------
