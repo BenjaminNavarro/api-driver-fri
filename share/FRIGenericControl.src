@@ -1,6 +1,6 @@
-&ACCESS RVP
+&ACCESS RVO
 &REL 9
-DEF FTSensorCobotTrq_1ms( )
+DEF FRIGenericControl( )
 ;FOLD Program information
     ;=====================================
     ; Stanford University
@@ -62,14 +62,14 @@ DEF FTSensorCobotTrq_1ms( )
     ;   remote host are sufficient).
     ;=====================================
 ;ENDFOLD (Variable information)
-
+INT USER_TOOL
+REAL USER_GRAVITATION[3]
+INT USER_CYCLE_TIME_MS
 USER_TOOL = 6
 
 USER_GRAVITATION[1] = 0.0
 USER_GRAVITATION[2] = 9.80665
 USER_GRAVITATION[3] = 0.0
-
-USER_CYCLE_TIME_MS  = 1
 
 ;FOLD Initialization
 
@@ -125,6 +125,41 @@ USER_CYCLE_TIME_MS  = 1
     ;ENDFOLD (Initialization of the variables for the FRI)
 ;ENDFOLD (Initialization)
 
+
+RETURN_VALUE = friOpen(20)
+
+; Signalize to the remote host that the FRI is initializing
+$FRI_TO_INT[1] = 1
+
+wait for ($FriQuality>=#OK)
+wait for $FRI_FRM_INT[1]<>0
+
+USER_CYCLE_TIME_MS  = $FRI_FRM_INT[2]
+
+$FRI_TO_INT[1] = 2
+wait for $FRI_FRM_INT[1]==0
+
+
+$FRI_TO_INT[1] = 3
+WAIT SEC 0.05
+RETURN_VALUE = friClose()
+
+;FOLD Screen output
+    $MSG_T={MSG_T: VALID FALSE, RELEASE FALSE, TYP #NOTIFY, MODUL[] " ", KEY[] " ", PARAM_TYP #VALUE, PARAM[] " ", DLG_FORMAT[] " ", ANSWER 0}
+    $MSG_T.MODUL[]="FRI-Ctrl"
+    IF (RETURN_VALUE == #OFF) THEN
+        $MSG_T.KEY[] = "FRI successfully closed."
+    ELSE
+        STRING_OFFSET = 0
+        SWRITE($MSG_T.KEY[], STATE, STRING_OFFSET, "ERROR during friClose (result: %d)", RETURN_VALUE)
+    ENDIF
+    $MSG_T.VALID=TRUE
+    WAIT FOR ($MSG_T.VALID == FALSE)
+    WAIT SEC 0.3
+;ENDFOLD (Screen output)
+
+
+;now enter in command mode
 ; Open the FRI
 RETURN_VALUE = friOpen(USER_CYCLE_TIME_MS)
 
@@ -142,6 +177,8 @@ RETURN_VALUE = friOpen(USER_CYCLE_TIME_MS)
     WAIT SEC 0.3
 ;ENDFOLD (Screen output)
 
+
+$FRI_TO_INT[1] = 0
 
 ; Signalize to the remote host that the FRI is open
 $FRI_TO_INT[16] = 10
@@ -221,13 +258,13 @@ REPEAT
     ENDIF
 
     IF ($FRI_FRM_INT[16] == 20) AND ($FRI_TO_INT[16] <> 10) THEN
-        $GRAVITATION[1] = USER_GRAVITATION[1]
-        $GRAVITATION[2] = USER_GRAVITATION[2]
-        $GRAVITATION[3] = USER_GRAVITATION[3]
         ;PTP $Pos_Act_Mes
         wait sec 0.2
         RETURN_VALUE = friStop()
 
+        $GRAVITATION[1] = USER_GRAVITATION[1]
+        $GRAVITATION[2] = USER_GRAVITATION[2]
+        $GRAVITATION[3] = USER_GRAVITATION[3]
         ;FOLD Screen output
             $MSG_T={MSG_T: VALID FALSE, RELEASE FALSE, TYP #NOTIFY, MODUL[] " ", KEY[] " ", PARAM_TYP #VALUE, PARAM[] " ", DLG_FORMAT[] " ", ANSWER 0}
             $MSG_T.MODUL[]="FRI-Ctrl"
