@@ -17,7 +17,7 @@ elseif(xeno32 OR linux32)
 		EXPORTED DEFINITIONS __LINUX__
 		INTERNAL COMPILER_OPTIONS -std=c++11)
 
-elseif(linux64 OR xeno64)
+elseif(linux64cxx11 OR linux64 OR xeno64)
 	declare_PID_Component(
 		SHARED_LIB
 		NAME fri-driver

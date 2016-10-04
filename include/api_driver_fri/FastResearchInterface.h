@@ -772,7 +772,7 @@ public:
 //!
 //! \sa FRIDataReceivedFromKRC
 //  ----------------------------------------------------------
-	void GetCurrentMassMatrix(float **MassMatrix);
+	void GetCurrentMassMatrix(float MassMatrix[7][7]);
 
 
 //  ---------------------- Doxygen info ----------------------

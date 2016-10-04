@@ -437,7 +437,7 @@ public:
 //!
 //! \sa FRIDataReceivedFromKRC
 //  ----------------------------------------------------------
-	int GetCurrentMassMatrix(float **MassMatrix) {
+	int GetCurrentMassMatrix(float MassMatrix[7][7]) {
 		this->FRI->GetCurrentMassMatrix(MassMatrix);
 		if (this->FRI->GetFRIMode() == FRI_STATE_OFF)
 		{
