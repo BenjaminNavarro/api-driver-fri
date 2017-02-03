@@ -161,7 +161,7 @@ public:
 //! \attention
 //! The call of the constructor does \b not fulfill any real-time requirements.
 //  ----------------------------------------------------------
-	FastResearchInterface(float cycle_time);
+	FastResearchInterface(float cycle_time, int server_port);
 
 
 //  ---------------------- Doxygen info ----------------------
@@ -1443,6 +1443,17 @@ protected:
 //! \sa sec_InitFile
 //  ----------------------------------------------------------
 	double CycleTime;
+
+
+//  ---------------------- Doxygen info ----------------------
+//! \var int ServerPort
+//!
+//! \brief
+//! Contains the port to open for the UDP connection with the KRC
+//!
+//! \sa sec_InitFile
+//  ----------------------------------------------------------
+	int ServerPort;
 
 
 //  ---------------------- Doxygen info ----------------------

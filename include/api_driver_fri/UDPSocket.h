@@ -5,7 +5,7 @@
 //! Header file for UDP sockets
 //!
 //! \details
-//! The communication between the remote PC and the KRC is done through 
+//! The communication between the remote PC and the KRC is done through
 //! UDP sockets
 //!
 //! \date December 2014
@@ -38,7 +38,7 @@
 //! WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
 //! See the License for the specific language governing permissions and\n
 //! limitations under the License.\n
-//! 
+//!
 //  ----------------------------------------------------------
 //   For a convenient reading of this file's source code,
 //   please use a tab width of four characters.
@@ -92,9 +92,9 @@ public:
 //! \attention
 //! Calling of the constructor does \b not fulfill any real-time requirements.
 //  ----------------------------------------------------------
-	UDPSocket(void);
-	
-	
+	UDPSocket(int server_port);
+
+
 //  ---------------------- Doxygen info ----------------------
 //! \fn ~UDPSocket(void)
 //!
@@ -108,8 +108,8 @@ public:
 //! Calling of the destructor does \b not fulfill any real-time requirements.
 //  ----------------------------------------------------------
 	~UDPSocket(void);
-	
-	
+
+
 //  ---------------------- Doxygen info ----------------------
 //! \fn int SendFRIDataToKRC(const FRIDataSendToKRC *DataPackageToBeSentToKRC)
 //!
@@ -125,7 +125,7 @@ public:
 //! <li>\c ENOTCONN if no connection is established or if a wrong amount
 //!        of data has been sent</li>
 //! </ul>
-//  ----------------------------------------------------------	
+//  ----------------------------------------------------------
 	int SendFRIDataToKRC(const FRIDataSendToKRC *DataPackageToBeSentToKRC);
 
 
@@ -145,7 +145,7 @@ public:
 //! <li>\c ENOTCONN if no connection is established or if a wrong amount
 //!        of data has been received</li>
 //! </ul>
-//  ----------------------------------------------------------		
+//  ----------------------------------------------------------
 	int ReceiveFRIDataFromKRC(FRIDataReceivedFromKRC *DataPackageFromKRC) const;
 
 
@@ -158,14 +158,14 @@ protected:
 //! Initializes the socket (only called by the constructor)
 //  ----------------------------------------------------------
 	void Init(void);
-	
-	
+
+
 //  ---------------------- Doxygen info ----------------------
 //! \fn void void Close(void)
 //!
 //! \brief
 //! Closes the socket (only called by the destructor)
-//  ----------------------------------------------------------	
+//  ----------------------------------------------------------
 	void Close(void);
 
 
@@ -209,31 +209,31 @@ private:
 //! </ul>
 //  ----------------------------------------------------------
 	int ReceiveUDPPackage(const int UDPSocketNumber, FRIDataReceivedFromKRC *ReceivedData) const;
-	
-	
+
+
 //  ---------------------- Doxygen info ----------------------
 //! \var UDPSocketNumber
 //!
 //! \brief
 //! Contains the integer socket number
 //  ----------------------------------------------------------
-	int UDPSocketNumber ;
-	
-	
+	int UDPSocketNumber;
+
+
 //  ---------------------- Doxygen info ----------------------
 //! \var ServerPortNumber
 //!
 //! \brief
 //! Contains the integer server port number
-//  ----------------------------------------------------------	
+//  ----------------------------------------------------------
 	int ServerPortNumber;
-	
+
 //  ---------------------- Doxygen info ----------------------
 //! \var IPAddressOfKRCUnit
 //!
 //! \brief
 //! Contains the IP address of the KRC unit
-//  ----------------------------------------------------------		
+//  ----------------------------------------------------------
 	struct sockaddr_in IPAddressOfKRCUnit;
 };
 

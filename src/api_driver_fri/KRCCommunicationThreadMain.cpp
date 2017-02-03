@@ -67,13 +67,13 @@ void* FastResearchInterface::KRCCommunicationThreadMain(void *ObjectPointer)
 
 	float ZeroVector[NUMBER_OF_JOINTS];
 
-	UDPSocket KRC;
-
 	FRIDataReceivedFromKRC LocalReadData;
 
 	FRIDataSendToKRC LocalCommandData;
 
 	FastResearchInterface           *ThisObject                     =   (FastResearchInterface*)ObjectPointer;
+
+	UDPSocket KRC(ThisObject->ServerPort);
 
 	memset(ZeroVector, 0x0, NUMBER_OF_JOINTS * sizeof(float));
 

@@ -69,7 +69,7 @@ using namespace std;
 // ****************************************************************
 // Constructor
 //
-FastResearchInterface::FastResearchInterface(float cycle_time)
+FastResearchInterface::FastResearchInterface(float cycle_time, int server_port)
 {
 	int FuntionResult                       =   0;
 
@@ -83,6 +83,7 @@ FastResearchInterface::FastResearchInterface(float cycle_time)
 	this->PriorityOutputConsoleThread       = 5;
 
 	this->CycleTime                         = cycle_time;
+	this->ServerPort                        = server_port;
 
 	this->OutputConsole                     =   new Console(PriorityOutputConsoleThread);
 

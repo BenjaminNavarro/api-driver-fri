@@ -106,9 +106,9 @@ public:
 //!
 //! \copydetails FastResearchInterface::FastResearchInterface()
 //  ----------------------------------------------------------
-	LWRBaseControllerInterface(float cycle_time)
+	LWRBaseControllerInterface(float cycle_time, int server_port)
 	{
-		this->FRI           =   new FastResearchInterface(cycle_time);
+		this->FRI           =   new FastResearchInterface(cycle_time, server_port);
 	}
 
 

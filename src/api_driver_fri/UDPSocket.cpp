@@ -59,15 +59,15 @@
 //! \brief
 //! Default UDP server port
 //  ----------------------------------------------------------
-#define SERVER_PORT 49938
+// #define SERVER_PORT 49938
 
 
 // ****************************************************************
 // Constructor
 //
-UDPSocket::UDPSocket(void)
+UDPSocket::UDPSocket(int server_port)
 {
-	this->ServerPortNumber  =   SERVER_PORT;
+	this->ServerPortNumber  =   server_port;
 
 	// --------------------------------------------
 	//! \todo Remove this.
