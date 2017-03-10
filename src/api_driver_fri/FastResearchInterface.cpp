@@ -220,10 +220,10 @@ FastResearchInterface::~FastResearchInterface()
 		delay(800);
 
 		// End the KRC communication thread
-		pthread_mutex_unlock(&(this->MutexForControlData));
+		// pthread_mutex_unlock(&(this->MutexForControlData));
 		// The UDP communication is working --> normal shutdown
 		this->KRCCommunicationThreadIsRunning = false;
-		pthread_mutex_unlock(&(this->MutexForControlData));
+		// pthread_mutex_unlock(&(this->MutexForControlData));
 	}
 	else
 	{
