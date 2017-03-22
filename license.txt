@@ -2,6 +2,7 @@
 Software license for the software named : api-driver-fri
 
 Software description : Wrapper for the FRI library
+
 Copyright (C) 2015  Benjamin Navarro (LIRMM) Robin Passama (LIRMM)
 
 This software is free software: you can redistribute it and/or modify it under the terms of the CeCILL-C license as published by
@@ -10,10 +11,15 @@ is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY with
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
 
 Information about license applying to this software:
+
 License : CeCILL-C
+
 Official name of the license : Contrat de license de logiciel libre CeCILL-C 
+
 Version of the license : 1
+
 License authors : the CEA CNRS INRIA
+
 Additionnal information can be found on the official website of the CeCILL licenses family (http://www.cecill.info/index.en.html)
 
 Legal terms of the license are reproduced below (french and english versions are provided):

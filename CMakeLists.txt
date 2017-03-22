@@ -17,9 +17,7 @@ declare_PID_Package(
 
 set_PID_Package_Version(1 3 0)
 
-check_PID_Platform(NAME xeno64 OS linux ARCH 64 CONFIGURATION xenomai posix)
-check_PID_Platform(NAME xeno32 OS linux ARCH 32 CONFIGURATION xenomai posix)
-check_All_PID_Default_Platforms(CONFIGURATION posix)
+check_PID_Platform(CONFIGURATION posix)
 
 add_PID_Package_Author(AUTHOR Robin Passama INSTITUTION LIRMM)
 add_PID_Package_Category(arm/kuka-lwr)
