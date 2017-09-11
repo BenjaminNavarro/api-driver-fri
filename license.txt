@@ -6,15 +6,15 @@ Software description : Wrapper for the FRI library
 Copyright (C) 2015  Benjamin Navarro (LIRMM) Robin Passama (LIRMM)
 
 This software is free software: you can redistribute it and/or modify it under the terms of the CeCILL-C license as published by
- the CEA CNRS INRIA, either version 1 of the License, or (at your option) any later version. This software 
-is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY without even the implied warranty of 
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ the CEA CNRS INRIA, either version 1 of the License, or (at your option) any later version. This software
+is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 Information about license applying to this software:
 
 License : CeCILL-C
 
-Official name of the license : Contrat de license de logiciel libre CeCILL-C 
+Official name of the license : Contrat de license de logiciel libre CeCILL-C
 
 Version of the license : 1
 
